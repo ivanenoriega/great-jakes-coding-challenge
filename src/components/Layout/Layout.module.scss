@@ -1,0 +1,9 @@
+@import '/src/styles/media-queries.scss';
+
+.container {
+	padding: 8px;
+
+	@include tabletAndUp {
+		padding: 16px;
+	}
+}
