@@ -16,23 +16,27 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Challenge
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Please create a simple SPA based on Next.js with the following specification:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- There should be two pages: posts listing page and post detail page
+	- You can fetch data from `https://dummyjson.com/posts` and use it to build detail URLs
+	- On the listing page show a list of posts consisting of post titles linked to respective detail
+	pages
+	- On the detail page show back button (to the listing page), post title, and post content
+	- Do some minimal styling using `SCSS` modules (to your taste)
+- On initial app load the very first request to fetch data should always be performed on the
+server side (SSR), subsequent requests to fetch data should always be performed on the client
+side (CSR) directly to `https://dummyjson.com`
+- There should be an animated crossfade transition between pages (similar to
+[https://next_gj.wrk.lol](https://great-jakes-coding-challenge.vercel.app))
+	- Important note: the transition should start only after the next page data is fetched and
+ready
+- The app should have cache (object level cache, e.g. cache based on `Map`): if data for
+requested URL was previously fetched from the API, then the API shouldn't be requested again
+- Don't spend too much time and keep the implementation as simple as possible
 
-## Learn More
+## App deployed
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Take a look at the app [here](https://great-jakes-coding-challenge.vercel.app).
