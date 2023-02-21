@@ -1,0 +1,25 @@
+@import '/src/styles/media-queries.scss';
+
+.container {
+	padding: 10px 0 !important;
+
+	.link {
+		text-decoration: none;
+
+		.itemNumber {
+			width: 40px;
+			height: 40px;
+			margin-right: 10px;
+			background-color: #666666;
+		}
+
+		.item {
+			color: black;
+			font-size: 20px;
+		}
+	}
+
+	@include tabletAndUp {
+		padding: 15px 0 !important;
+	}
+}
