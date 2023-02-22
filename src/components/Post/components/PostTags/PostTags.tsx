@@ -9,27 +9,10 @@ type Props = {
 
 const PostTags: FC<Props> = ({ tags }) => {
 	return (
-		<Stack
-			direction="row"
-			
-			gap={1}
-			component={m.div}
-			animate={{ opacity: 1 }}
-			initial={{ opacity: 0 }}
-			transition={{ delay: 0.5 }}
-		>
+		<Stack direction="row" gap={1}>
 			{
-				tags.map((tag, index) => (
-					<Chip component={m.div} animate={{
-						opacity: 1,
-					}}
-					transition={{
-						delay: (index * 0.3) + 0.3,
-					}}
-					initial={{
-						opacity: 0,
-					}}
-					key={tag} sx={{ textTransform: 'capitalize' }} label={tag} />
+				tags.map((tag) => (
+					<Chip key={tag} sx={{ textTransform: 'capitalize' }} label={tag} />
 				))
 			}
 		</Stack>

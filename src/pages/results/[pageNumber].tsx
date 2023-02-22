@@ -1,11 +1,11 @@
-import { getPosts } from '@/services/posts'
+import { MAX_POST_PER_PAGE, getPosts, getPostsTotal } from '@/services/posts'
 import { PostListType as PostListType } from '@/types/post'
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { GetServerSideProps, GetStaticProps } from 'next'
 import Head from 'next/head'
 import { FC } from 'react'
-import { isString } from 'util'
+import { isString, isUndefined } from 'util'
 import dynamic from 'next/dynamic'
 import PostPagination from '@/components/PostPagination';
 import PageTransition from '@/components/PageTransition';
@@ -40,20 +40,25 @@ const Home: FC<Props> = ({ posts, pagination }) => {
 	)
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async (context) => {
 	try {
-		const response = await getPosts(1)
+		let page = 0
+		const pageNumber = context?.params?.pageNumber
+		if (isString(pageNumber) && !isUndefined(pageNumber)) {
+			page = parseInt(pageNumber)
+		}
+		const response = await getPosts(page)
 		const { posts, total, limit } = await response.json()
 		const pagination = {
 			count: Math.floor(total / limit),
-			page: 1
+			page
 		}
 
 		return {
 			props: {
 				posts,
 				pagination,
-				page: 'home'
+				page: `result_${page}`
 			},
 		}
 	} catch (error) {
@@ -62,6 +67,21 @@ export const getStaticProps: GetStaticProps = async () => {
 		}
 	}
 
+}
+
+export async function getStaticPaths() {
+	const totalPosts = await getPostsTotal()
+	const totalPages = Math.floor(totalPosts / MAX_POST_PER_PAGE)
+
+	// Get the paths we want to pre-render based on posts
+	const paths = []
+	for (let i = 1; i <= totalPages; i++) {
+		paths.push({
+			params: { pageNumber: i.toString() }
+		})
+	}
+
+	return { paths, fallback: 'blocking' }
 }
 
 export default Home

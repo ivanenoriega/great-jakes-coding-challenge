@@ -11,8 +11,9 @@ type Props = {
 }
 
 const PostPaginationItem: FC<Props> = ({ item }) => {
+	const href = item.page === 1 ? "/" : `/results/${item.page}`
 	return (
-		<Link href={`/?page=${item.page}`} className={styles.link}>
+		<Link href={href} className={styles.link}>
 			<PaginationItem
 				slots={{ previous: ArrowBack, next: ArrowForward }}
 				{...item}

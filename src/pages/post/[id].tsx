@@ -1,10 +1,11 @@
 import { PostType as PostType } from "@/types/post";
-import { getPost } from "@/services/posts";
+import { getPost, getPostsTotal } from "@/services/posts";
 import Head from "next/head";
 import { FC } from "react";
 import { isString } from "util";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
+import PageTransition from "@/components/PageTransition";
 
 const Post = dynamic(() => import('@/components/Post'))
 
@@ -14,7 +15,7 @@ type Props = {
 
 const PostPage: FC<Props> = ({ post }) => {
 	return (
-		<>
+		<PageTransition>
 			<Head>
 				<title>{post.title}</title>
 				<meta name="description" content={post.body} />
@@ -22,11 +23,11 @@ const PostPage: FC<Props> = ({ post }) => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<Post post={post} />
-		</>
+		</PageTransition>
 	)
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
 	try {
 		const id = context?.params?.id;
 
@@ -49,21 +50,34 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 		const post = await response.json();
 
-		context.res.setHeader(
-			'Cache-Control',
-			'public, s-maxage=10, stale-while-revalidate=59'
-		)
-
 		return {
 			props: {
-				post
+				post,
+				revalidate: 3600,
+				page: 'post'
 			},
 		};
 	} catch (error) {
 		return {
-			notFound: true
+			notFound: true,
+			revalidate: 600,
 		}
 	}
+}
+
+
+export async function getStaticPaths() {
+	const totalPosts = await getPostsTotal()
+  
+	// Get the paths we want to pre-render based on posts
+	const paths = []
+	for (let i = 1; i <= totalPosts; i++) {
+		paths.push({
+			params: { id: i.toString() }
+		})
+	}
+
+	return { paths, fallback: 'blocking' }
 }
 
 export default PostPage;
